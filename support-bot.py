@@ -6,8 +6,12 @@ import logging
 import os
 
 from dotenv import load_dotenv
-from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from google.cloud import dialogflow
+from telegram import ForceReply, Update
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
+
+
+LANGUAGE_CODE = 'ru'
 
 
 logger = logging.getLogger('support_bot.logger')
@@ -16,13 +20,25 @@ logger = logging.getLogger('support_bot.logger')
 def start_command(update: Update, context: CallbackContext) -> None:
     """Посылает сообщение, когда клиент ввёл команду /start."""
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Здравствуйте!")
+    update.message.reply_text('Здравствуйте!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    """Повторяет сообщение клиента."""
+def reply(update: Update, context: CallbackContext) -> None:
+    """Отвечает на приветствие клиента."""
 
-    update.message.reply_text(update.message.text)
+    session_id = update.effective_chat.id
+    text = update.message.text
+    response_text = get_dialoflow_response(session_id, text)
+    update.message.reply_text(response_text)
+
+
+def get_dialoflow_response(session_id, text):
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(os.environ['DIALOGFLOW_PROJECT_ID'], session_id)
+    text_input = dialogflow.TextInput(text=text, language_code=LANGUAGE_CODE)
+    query_input = dialogflow.QueryInput(text=text_input)
+    response = session_client.detect_intent(request={"session": session, "query_input": query_input})
+    return response.query_result.fulfillment_text
 
 
 def main() -> None:
@@ -37,7 +53,7 @@ def main() -> None:
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start_command))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, reply))
 
     updater.start_polling()
     updater.idle()
