@@ -25,17 +25,17 @@ def start_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Здравствуйте!')
 
 
-def reply(update: Update, context: CallbackContext, dialogflow_project_id: str) -> None:
+def reply(update: Update, context: CallbackContext, google_cloud_project: str) -> None:
     """Отвечает в telegram-чате на сообщение пользователя."""
 
     dialogflow_session_id = update.effective_chat.id
     user_message = update.message.text
     dialogflow_response = dialogflow_agent.get_response(
-        dialogflow_project_id,
+        google_cloud_project,
         dialogflow_session_id,
         user_message
     )
-    update.message.reply_text(dialogflow_response)
+    update.message.reply_text(dialogflow_response.query_result.fulfillment_text)
 
 
 def main() -> None:
@@ -52,7 +52,7 @@ def main() -> None:
     dispatcher.add_handler(
         MessageHandler(
             Filters.text & ~Filters.command,
-            partial(reply, dialogflow_project_id=os.environ['DIALOGFLOW_PROJECT_ID'])
+            partial(reply, google_cloud_project=os.environ['GOOGLE_CLOUD_PROJECT'])
         )
     )
     updater.start_polling()

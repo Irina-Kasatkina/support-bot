@@ -16,19 +16,22 @@ import dialogflow_agent
 logger = logging.getLogger('support_bot.logger')
 
 
-def reply(event, vk_api, dialogflow_project_id):
+def reply(event, vk_api, google_cloud_project):
     """Отвечает в чате VK на сообщение пользователя."""
 
     dialogflow_session_id = event.user_id
     user_message = event.text
     dialogflow_response = dialogflow_agent.get_response(
-        dialogflow_project_id,
+        google_cloud_project,
         dialogflow_session_id,
         user_message
     )
+    if dialogflow_response.query_result.intent.is_fallback:
+        return
+
     vk_api.messages.send(
         peer_id=event.peer_id,
-        message=dialogflow_response,
+        message=dialogflow_response.query_result.fulfillment_text,
         random_id=random.randint(1,1000)
     )
 
@@ -42,11 +45,11 @@ def main() -> None:
     vk_session = vk.VkApi(token=os.environ['VK_GROUP_TOKEN'])
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    dialogflow_project_id = os.environ['DIALOGFLOW_PROJECT_ID']
+    google_cloud_project = os.environ['GOOGLE_CLOUD_PROJECT']
 
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            reply(event, vk_api, dialogflow_project_id)           
+            reply(event, vk_api, google_cloud_project)           
 
 
 if __name__ == '__main__':
