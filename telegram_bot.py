@@ -40,9 +40,8 @@ def main() -> None:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     load_dotenv()
-    telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
 
-    updater = Updater(telegram_bot_token)
+    updater = Updater(os.environ['TELEGRAM_BOT_TOKEN'])
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start_command))
