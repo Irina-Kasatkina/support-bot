@@ -1,3 +1,4 @@
 python-dotenv==0.21.*
 python-telegram-bot==13.*
 google-cloud-dialogflow==2.16.1
+translate==3.6.1
