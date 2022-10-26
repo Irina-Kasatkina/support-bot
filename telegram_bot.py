@@ -25,13 +25,17 @@ def start_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Здравствуйте!')
 
 
-def reply(update: Update, context: CallbackContext, project_id: str) -> None:
-    """Отвечает в telegram-чате на приветствие пользователя."""
+def reply(update: Update, context: CallbackContext, dialogflow_project_id: str) -> None:
+    """Отвечает в telegram-чате на сообщение пользователя."""
 
-    session_id = update.effective_chat.id
-    text = update.message.text
-    response_text = dialogflow_agent.get_response(project_id, session_id, text)
-    update.message.reply_text(response_text)
+    dialogflow_session_id = update.effective_chat.id
+    user_message = update.message.text
+    dialogflow_response = dialogflow_agent.get_response(
+        dialogflow_project_id,
+        dialogflow_session_id,
+        user_message
+    )
+    update.message.reply_text(dialogflow_response)
 
 
 def main() -> None:
@@ -48,7 +52,7 @@ def main() -> None:
     dispatcher.add_handler(
         MessageHandler(
             Filters.text & ~Filters.command,
-            partial(reply, project_id=os.environ['DIALOGFLOW_PROJECT_ID'])
+            partial(reply, dialogflow_project_id=os.environ['DIALOGFLOW_PROJECT_ID'])
         )
     )
     updater.start_polling()
