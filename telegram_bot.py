@@ -27,12 +27,12 @@ def reply(update: Update, context: CallbackContext, google_cloud_project: str) -
 
     dialogflow_session_id = update.effective_chat.id
     user_message = update.message.text
-    dialogflow_response = dialogflow_agent.get_response(
+    dialogflow_answer, _ = dialogflow_agent.get_response(
         google_cloud_project,
         dialogflow_session_id,
         user_message
     )
-    update.message.reply_text(dialogflow_response.query_result.fulfillment_text)
+    update.message.reply_text(dialogflow_answer)
 
 
 def main() -> None:

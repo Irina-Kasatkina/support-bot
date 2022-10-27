@@ -13,7 +13,7 @@ LANGUAGE_CODE = 'ru'
 logger = logging.getLogger('support_bot.logger')
 
 
-def get_response(google_cloud_project: str, session_id: str, text: str) -> dialogflow.DetectIntentResponse:
+def get_response(google_cloud_project: str, session_id: str, text: str) -> tuple:
     """Получает от DialogFlow ответ на реплику пользователя."""
 
     session_client = dialogflow.SessionsClient()
@@ -21,4 +21,4 @@ def get_response(google_cloud_project: str, session_id: str, text: str) -> dialo
     text_input = dialogflow.TextInput(text=text, language_code=LANGUAGE_CODE)
     query_input = dialogflow.QueryInput(text=text_input)
     response = session_client.detect_intent(request={"session": session, "query_input": query_input})
-    return response
+    return response.query_result.fulfillment_text, response.query_result.intent.is_fallback
