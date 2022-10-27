@@ -20,26 +20,23 @@ logger = logging.getLogger('support_bot.logger')
 def reply(event, vk_api, google_cloud_project):
     """Отвечает в чате VK на сообщение пользователя."""
 
-    try:
-        dialogflow_session_id = event.user_id
-        user_message = event.text
-        dialogflow_answer, dialogflow_is_fallback = (
-            dialogflow_agent.get_response(
-                google_cloud_project,
-                dialogflow_session_id,
-                user_message
-            )
+    dialogflow_session_id = event.user_id
+    user_message = event.text
+    dialogflow_answer, dialogflow_is_fallback = (
+        dialogflow_agent.get_response(
+            google_cloud_project,
+            dialogflow_session_id,
+            user_message
         )
-        if dialogflow_is_fallback:
-            return
+    )
+    if dialogflow_is_fallback:
+        return
 
-        vk_api.messages.send(
-            peer_id=event.peer_id,
-            message=dialogflow_answer,
-            random_id=random.randint(1, 1000)
-        )
-    except Exception as error:
-        logger.exception(f'Проблема {error} в reply() vk-бота.')
+    vk_api.messages.send(
+        peer_id=event.peer_id,
+        message=dialogflow_answer,
+        random_id=random.randint(1, 1000)
+    )
 
 
 def main() -> None:
@@ -63,7 +60,7 @@ def main() -> None:
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 reply(event, vk_api, google_cloud_project)
     except Exception as error:
-        logger.exception(f'Ошибка {error} в main() vk-бота.')
+        logger.exception(f'Ошибка {error} в vk-боте.')
 
 
 if __name__ == '__main__':
