@@ -47,9 +47,10 @@ pip install -r requirements.txt
 
 Часть настроек утилит берётся из переменных окружения. Чтобы их определить, создайте файл `.env` в той же папке, где и скрипты, и запишите туда данные в таком формате: `ПЕРЕМЕННАЯ=значение`.
 
-Доступно 4 обязательныхя переменных:
+Доступно 5 обязательных переменных:
 
 - `TELEGRAM_BOT_TOKEN` - API-токен Telegram-бота, с помощью которого будет осуществляться отправка уведомлений. Если такого telegram-бота пока нет, [создайте его](https://way23.ru/регистрация-бота-в-telegram.html).
+- `TELEGRAM_MODERATOR_CHAT_ID` - ID чата модератора ботов, в который боты присылают сообщения об ошибках.
 - `VK_GROUP_TOKEN` - API-токен группы ВКонтакте. Чтобы получить этот токен, нужно [Создать группу ВКонтакте](https://vk.com/groups?tab=admin), разрешить боту отправлять сообщения от имени группы и получить токен в меню "Работа с API" ВКонтакте.
 - `GOOGLE_CLOUD_PROJECT` - идентификатор проекта DialogFlow ([Инструкция по созданию](https://cloud.google.com/dialogflow/es/docs/quick/setup)).
 - `GOOGLE_APPLICATION_CREDENTIALS` - путь к json-файлу с Application Default Credentials ([см. инструкцию по созданию](https://cloud.google.com/docs/authentication/client-libraries)).
@@ -58,6 +59,7 @@ pip install -r requirements.txt
 ```
 #
 TELEGRAM_BOT_TOKEN=958423683:AAEAtJ5Lde5YYfkjergber
+TELEGRAM_MODERATOR_CHAT_ID=12345
 VK_GROUP_TOKEN=vk1.HJKJJK89479shghadosAHKLkhdkhuch654758GHKFHHKgk848
 GOOGLE_CLOUD_PROJECT=moulin-start-55
 GOOGLE_APPLICATION_CREDENTIALS=google-credentials.json

@@ -11,6 +11,7 @@ from telegram import ForceReply, Update
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
 import dialogflow_agent
+from telegram_log_handler import TelegramLogsHandler
 
 
 logger = logging.getLogger('support_bot.logger')
@@ -38,11 +39,15 @@ def reply(update: Update, context: CallbackContext, google_cloud_project: str) -
 def main() -> None:
     """Запускает telegram-бота, использующего DialogFlow."""
 
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
     load_dotenv()
+    tg_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+    tg_moderator_chat_id = os.environ['TELEGRAM_MODERATOR_CHAT_ID']
 
-    updater = Updater(os.environ['TELEGRAM_BOT_TOKEN'])
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(tg_bot_token, tg_moderator_chat_id))
+ 
+    updater = Updater(tg_bot_token)
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start_command))
