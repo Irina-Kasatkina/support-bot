@@ -32,7 +32,7 @@ def reply(event, vk_api, google_cloud_project):
     vk_api.messages.send(
         peer_id=event.peer_id,
         message=dialogflow_response.query_result.fulfillment_text,
-        random_id=random.randint(1,1000)
+        random_id=random.randint(1, 1000)
     )
 
 

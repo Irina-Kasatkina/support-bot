@@ -3,7 +3,6 @@
 """Содержит функции взаимодействия с DialogFlow."""
 
 import logging
-import os
 
 from google.cloud import dialogflow
 
@@ -14,7 +13,7 @@ LANGUAGE_CODE = 'ru'
 logger = logging.getLogger('support_bot.logger')
 
 
-def get_response(google_cloud_project: str, session_id: str, text: str) -> str:
+def get_response(google_cloud_project: str, session_id: str, text: str) -> dialogflow.DetectIntentResponse:
     """Получает от DialogFlow ответ на реплику пользователя."""
 
     session_client = dialogflow.SessionsClient()

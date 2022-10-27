@@ -1,5 +1,7 @@
 # coding=utf-8
 
+"""Создаёт и обучает интенты DialogFlow на основе информации из json-файла."""
+
 import json
 import os
 
@@ -36,7 +38,7 @@ def main() -> None:
     load_dotenv()
     project_id = os.environ['DIALOGFLOW_PROJECT_ID']
 
-    translator= Translator(from_lang='russian',to_lang='english')
+    translator = Translator(from_lang='russian', to_lang='english')
     with open('questions.json', 'r', encoding='utf-8') as json_file:
         questions_sections = json.load(json_file)
 

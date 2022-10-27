@@ -13,9 +13,6 @@ from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandle
 import dialogflow_agent
 
 
-LANGUAGE_CODE = 'ru'
-
-
 logger = logging.getLogger('support_bot.logger')
 
 
